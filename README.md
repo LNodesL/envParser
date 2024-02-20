@@ -1,57 +1,91 @@
-# Lightweight C++ INI Parser
+# Lightweight C++ Env Parser
 
-This is a lightweight C++ library for parsing and manipulating INI (Initialization) files. INI files are simple text files that store configuration data in a key-value pair format, organized into sections.
+EnvParser is a simple C++ class for parsing .env files and managing environment variables.
 
 ## Features
 
-- Parse INI files and access their contents.
-- Add, modify, or remove sections, keys, and values.
-- Save modified data back to the INI file.
+- Parses .env files and stores key-value pairs.
+- Supports setting, removing, and retrieving key-value pairs.
+- Saves changes to .env files.
 
 ## Usage
 
-1. Include the `IniParser.h` header file in your C++ project.
-2. Instantiate an `IniParser` object.
-3. Use the provided methods to parse, manipulate, and save INI files.
+### 1. Include the `envParser.h` header file in your project.
 
 ```cpp
-#include "IniParser.h"
+#include "envParser.h"
+```
+
+### 2. Create an instance of `EnvParser`.
+
+```cpp
+EnvParser parser;
+```
+
+### 3. Parse a .env file.
+
+```cpp
+parser.parseFromFile("example.env");
+```
+
+### 4. Get the value of a key.
+
+```cpp
+std::string value = parser.getValue("KEY_NAME");
+```
+
+### 5. Set a new key-value pair.
+
+```cpp
+parser.setValue("NEW_KEY", "new_value");
+```
+
+### 6. Remove a key.
+
+```cpp
+parser.removeKey("KEY_NAME");
+```
+
+### 7. Save changes to a .env file.
+
+```cpp
+parser.saveToFile("updated_env.env");
+```
+
+## Example
+
+Here's a simple example of using EnvParser:
+
+```cpp
+#include "envParser.h"
 #include <iostream>
 
 int main() {
-    // Instantiate an IniParser object
-    IniParser parser;
-
+    EnvParser parser;
     try {
-        // Parse an existing INI file
-        parser.parseFromFile("example.ini");
+        // Parse the .env file
+        parser.parseFromFile("demo.env");
 
-        // Access and modify data
-        parser.setValue("Section1", "Key1", "NewValue");
-        parser.addSection("NewSection");
-        parser.setValue("NewSection", "NewKey", "Value");
+        // Get and print the value of a key
+        std::cout << "Value of KEY1: " << parser.getValue("KEY1") << std::endl;
 
-        // Save modified data back to the INI file
-        parser.saveToFile("example.ini");
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        // Set a new key-value pair
+        parser.setValue("NEW_KEY", "new_value");
+
+        // Save the changes to a new file
+        parser.saveToFile("updated_env.env");
+
+        // Remove a key
+        parser.removeKey("KEY2");
+
+        // Save the updated file
+        parser.saveToFile("updated_env_removed_key.env");
+
+        std::cout << "Test completed successfully." << std::endl;
+    } catch (const std::exception& ex) {
+        std::cerr << "Error: " << ex.what() << std::endl;
         return 1;
     }
-
     return 0;
 }
 ```
-
-## API Reference
-
-- `parseFromFile(const std::string& filename)`: Parse an INI file specified by the filename.
-- `getValue(const std::string& section, const std::string& key)`: Get the value associated with a key in a specific section.
-- `setValue(const std::string& section, const std::string& key, const std::string& value)`: Set the value of a key in a specific section.
-- `addSection(const std::string& section)`: Add a new section to the INI file.
-- `removeSection(const std::string& section)`: Remove a section and all its contents from the INI file.
-- `removeKey(const std::string& section, const std::string& key)`: Remove a key from a specific section.
-- `saveToFile(const std::string& filename)`: Save the current state of the INI file to a new file.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
